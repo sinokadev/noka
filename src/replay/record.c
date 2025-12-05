@@ -28,7 +28,7 @@ void noka_record(char path[256]) {
     strncpy(audio_device, get_system_audio(), sizeof(audio_device) - 1);
     audio_device[255] = '\0';
     
-    sprintf(output_path, "%s/replay_%%02d.mp4", path);
+    sprintf(output_path, "%s/replay_%%Y%%m%%d_%%H%%M%%S.mp4", path);
     
     execlp("ffmpeg", "ffmpeg", 
            "-f", "x11grab", 
@@ -36,8 +36,7 @@ void noka_record(char path[256]) {
            "-f", "pulse",
            "-i", audio_device,  // 복사한 거 사용
            "-f", "segment", 
-           "-segment_time", "10",
-           "-segment_wrap", "10",
+            "-segment_time", "180",  // 3분
            "-reset_timestamps", "1",
            output_path, 
            NULL);

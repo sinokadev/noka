@@ -27,22 +27,6 @@ int noka_replay_enable() {
     
     printf("Create Daemon...\n");
     
-    // 타임스탬프로 세션 디렉토리 생성
-    time_t now = time(NULL);
-    struct tm* t = localtime(&now);
-    
-    char session_path[512];
-    snprintf(session_path, sizeof(session_path), 
-             "%s/noka/replay/%04d%02d%02d_%02d%02d%02d",
-             getenv("HOME"),
-             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-             t->tm_hour, t->tm_min, t->tm_sec);
-    
-    // 디렉토리 생성
-    char mkdir_cmd[600];
-    snprintf(mkdir_cmd, sizeof(mkdir_cmd), "mkdir -p %s", session_path);
-    system(mkdir_cmd);
-    
     int pid = fork();
     if (pid < 0) {
         perror("noka: fork");
@@ -65,7 +49,7 @@ int noka_replay_enable() {
         dup(0);
         dup(0);
         
-        noka_record(session_path);
+        noka_record("~/noka/replay");
         exit(0);
     } else {
         printf("noka: replay recording enabled\n");
