@@ -1,0 +1,1 @@
+gcc src/main.c src/replay/replay.c src/replay/record.c -Iinclude -o noka
