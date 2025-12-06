@@ -31,15 +31,16 @@ void noka_record(char path[256]) {
     sprintf(output_path, "%s/replay_%%Y%%m%%d_%%H%%M%%S.mp4", path);
     
     execlp("ffmpeg", "ffmpeg", 
-           "-f", "x11grab", 
-           "-i", ":0.0",
-           "-f", "pulse",
-           "-i", audio_device,  // 복사한 거 사용
-           "-f", "segment", 
-            "-segment_time", "180",  // 3분
-           "-reset_timestamps", "1",
-           output_path, 
-           NULL);
+        "-f", "x11grab", 
+        "-i", ":0.0",
+        "-f", "pulse",
+        "-i", audio_device,
+        "-strftime", "1",  // 이거 추가!
+        "-f", "segment", 
+        "-segment_time", "10",
+        "-reset_timestamps", "1",
+        output_path, 
+        NULL);
     
     perror("ffmpeg exec failed");
     exit(1);

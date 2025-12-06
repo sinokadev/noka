@@ -49,7 +49,9 @@ int noka_replay_enable() {
         dup(0);
         dup(0);
         
-        noka_record("~/noka/replay");
+        char full_path[512];
+        snprintf(full_path, sizeof(full_path), "%s/noka/replay", getenv("HOME"));
+        noka_record(full_path);
         exit(0);
     } else {
         printf("noka: replay recording enabled\n");

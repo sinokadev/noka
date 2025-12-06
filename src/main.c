@@ -5,7 +5,7 @@
 #include "noka/replay.h"
 
 int main(int argc, char *argv[]) {
-    printf("noka version 1.0.0-ubuntu24.04 Copyright (c) 2025 sinokadev(noka)\n");
+    printf("noka version 1.0.1-ubuntu24.04 Copyright (c) 2025 sinokadev(noka)\n");
 
     if (argc < 2) {
         printf("Usage: %s <command> [subcommand] [action]\n", argv[0]);
