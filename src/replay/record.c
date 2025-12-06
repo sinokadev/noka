@@ -37,7 +37,7 @@ void noka_record(char path[256]) {
         "-i", audio_device,
         "-strftime", "1",  // 이거 추가!
         "-f", "segment", 
-        "-segment_time", "10",
+        "-segment_time", "180",
         "-reset_timestamps", "1",
         output_path, 
         NULL);
