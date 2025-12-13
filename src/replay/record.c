@@ -9,7 +9,7 @@
 char* get_system_audio() {
     static char device[256];
     FILE* fp = popen("pactl get-default-sink", "r");
-    if (fp) {
+    if (fp != NULL) {
         fgets(device, sizeof(device), fp);
         device[strcspn(device, "\n")] = 0;
         strcat(device, ".monitor");
@@ -35,7 +35,7 @@ void noka_record(char path[256]) {
         "-i", ":0.0",
         "-f", "pulse",
         "-i", audio_device,
-        "-strftime", "1",  // 이거 추가!
+        "-strftime", "1",
         "-f", "segment", 
         "-segment_time", "180",
         "-reset_timestamps", "1",

@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <dirent.h>
 
 #include "noka/replay.h"
 #include "noka/record.h"
@@ -16,6 +17,25 @@ char* get_pid_path() {
     static char path[512];
     snprintf(path, sizeof(path), "%s/noka/temp/noka_replay.pid", getenv("HOME"));
     return path;
+}
+
+char* get_replay_path() {
+    static char path[512];
+    snprintf(path, sizeof(path), "%s/noka/replay", getenv("HOME"));
+    return path;
+}
+
+int delete_old_replay() {
+    DIR* dp = opendir(get_replay_path());
+    if (dp) {
+        struct dirent* entry;
+        while ((entry = readdir(dp)) != NULL)
+        {
+            printf("%s\n", entry->d_name);
+        }
+        closedir(dp);
+    }
+
 }
 
 int noka_replay_enable() {
@@ -37,7 +57,7 @@ int noka_replay_enable() {
         setsid(); 
         
         FILE* fp = fopen(get_pid_path(), "w");
-        if (fp) {
+        if (fp != NULL) {
             fprintf(fp, "%d", getpid());
             fclose(fp);
         }
@@ -49,9 +69,7 @@ int noka_replay_enable() {
         dup(0);
         dup(0);
         
-        char full_path[512];
-        snprintf(full_path, sizeof(full_path), "%s/noka/replay", getenv("HOME"));
-        noka_record(full_path);
+        noka_record(get_replay_path());
         exit(0);
     } else {
         printf("noka: replay recording enabled\n");
@@ -62,7 +80,7 @@ int noka_replay_enable() {
 int noka_replay_disable() {
     int pid;
     FILE* fp = fopen(get_pid_path(), "r");
-    if (fp) {
+    if (fp != NULL) {
         fscanf(fp, "%d", &pid);
         fclose(fp);
     }
