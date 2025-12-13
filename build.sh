@@ -1,1 +1,1 @@
-gcc src/main.c src/replay/replay.c src/replay/record.c -Iinclude -o noka
+gcc -DBUILD_DATE=\"$(date +%Y-%m-%d)\" src/main.c src/replay/replay.c src/replay/record.c -Iinclude -o noka

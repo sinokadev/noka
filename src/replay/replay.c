@@ -13,11 +13,7 @@
 #include "noka/replay.h"
 #include "noka/record.h"
 
-char* get_pid_path() {
-    static char path[512];
-    snprintf(path, sizeof(path), "%s/noka/temp/noka_replay.pid", getenv("HOME"));
-    return path;
-}
+#define PID_PATH "/var/run"
 
 char* get_replay_path() {
     static char path[512];
@@ -39,13 +35,12 @@ int delete_old_replay() {
 }
 
 int noka_replay_enable() {
-    // 이미 실행 중인지 체크
-    if (access(get_pid_path(), F_OK) == 0) {
+    if (access(PID_PATH, F_OK) == 0) {
         printf("noka: replay already enabled\n");
         return 1;
     }
     
-    printf("Create Daemon...\n");
+    printf("noka: create daemon...\n");
     
     int pid = fork();
     if (pid < 0) {
@@ -56,7 +51,7 @@ int noka_replay_enable() {
         chdir("/");
         setsid(); 
         
-        FILE* fp = fopen(get_pid_path(), "w");
+        FILE* fp = fopen(PID_PATH, "w");
         if (fp != NULL) {
             fprintf(fp, "%d", getpid());
             fclose(fp);
@@ -79,7 +74,7 @@ int noka_replay_enable() {
 
 int noka_replay_disable() {
     int pid;
-    FILE* fp = fopen(get_pid_path(), "r");
+    FILE* fp = fopen(PID_PATH, "r");
     if (fp != NULL) {
         fscanf(fp, "%d", &pid);
         fclose(fp);
@@ -91,7 +86,7 @@ int noka_replay_disable() {
         perror("noka: kill");
     }
 
-    unlink(get_pid_path());
+    unlink(PID_PATH);
 
     return 0;
 }
