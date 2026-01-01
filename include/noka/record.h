@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-void noka_record(char* path);
+void noka_record(const char *path);
 
 #endif // RECORD_H

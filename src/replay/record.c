@@ -20,7 +20,7 @@ char* get_system_audio() {
     return "default";
 }
 
-void noka_record(char path[256]) {
+void noka_record(const char *path) {
     char output_path[300];
     char audio_device[256];
     
