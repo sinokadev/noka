@@ -18,18 +18,18 @@
 #define REPLAY_SAFE_HOURS  24
 #define REPLAY_ALL_SAVE    0
 
-int delete_old_replay()
-{   
+int delete_old_replay() {   
+    printf("noka: delete replay...\n");
     if (REPLAY_ALL_SAVE) {
         printf("noka: no replay delete flag is true\n");
         printf("hint: If you want to delete the replay, change the \"REPLAY_ALL_SAVE\" constant in the src/replay/replay.c file to 0 before compiling.\n");
-        return 1;
+        return 0;
     }
 
     DIR* dp = opendir(get_replay_path());
     if (!dp) {
         perror("noka: opendir");
-        return -1;
+        return 1;
     }
 
     time_t now = time(NULL);
@@ -88,7 +88,32 @@ int delete_old_replay()
     }
 
     closedir(dp);
+
+    printf("noka: complete!\n");
     return 0;
+}
+
+int noka_delete_old_replay() {
+    char answer[8];
+
+    printf("This will permanently delete old replay files.\n");
+    printf("Do you really want to continue? [y/N]: ");
+    fflush(stdout);
+
+    if (!fgets(answer, sizeof(answer), stdin)) {
+        printf("Canceled.\n");
+        return 1;
+    }
+
+    // 첫 글자만 확인 (Y / y 만 허용)
+    if (answer[0] == 'y' || answer[0] == 'Y') {
+        printf("Deleting old replay files...\n");
+        delete_old_replay();
+        return 0;
+    }
+
+    printf("Canceled.\n");
+    return 1;
 }
 
 int noka_replay_enable() {
