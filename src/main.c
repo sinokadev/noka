@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "noka/replay.h"
+#include "noka/save.h"
 
 int main(int argc, char *argv[]) {
     printf("noka version 1.0.2 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
@@ -11,21 +12,42 @@ int main(int argc, char *argv[]) {
         printf("Usage: %s <command> [subcommand] [action]\n", argv[0]);
         return 1;
     }
-    
+
     if (strcmp(argv[1], "replay") == 0) {
-        if (argc < 3) {  // 이거 추가!
-            printf("Usage: noka replay <enable|disable>\n");
+        if (argc < 3) {
+            printf("Usage: noka replay <enable|disable|save>\n");
             return 1;
         }
 
         system("mkdir -p ~/noka/temp");
         system("mkdir -p ~/noka/replay");
-        
+
         if (strcmp(argv[2], "enable") == 0) {
-            return noka_replay_enable();  // ← return 추가
-        } else if (strcmp(argv[2], "disable") == 0) {
-            return noka_replay_disable();  // ← return 추가
-        } else {
+            return noka_replay_enable();
+        }
+        else if (strcmp(argv[2], "disable") == 0) {
+            return noka_replay_disable();
+        }
+        else if (strcmp(argv[2], "save") == 0) {
+            int count = 1;
+
+            // argv[3]부터 옵션 파싱
+            for (int i = 3; i < argc; i++) {
+                if ((strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--count") == 0) &&
+                    i + 1 < argc) {
+                    count = atoi(argv[i + 1]);
+                    if (count <= 0) count = 1;
+                    i++; // 값 하나 소비
+                } else {
+                    printf("Unknown option: %s\n", argv[i]);
+                    return 1;
+                }
+            }
+
+            return noka_save_replay(count);
+        }
+
+        else {
             printf("Unknown subcommand: %s\n", argv[2]);
             return 1;
         }
@@ -34,6 +56,4 @@ int main(int argc, char *argv[]) {
         printf("Unknown command: %s\n", argv[1]);
         return 1;
     }
-    
-    return 0;
 }
