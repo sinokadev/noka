@@ -6,7 +6,7 @@
 #include "save.h"
 
 int main(int argc, char *argv[]) {
-    printf("noka version 1.0.2 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
+    printf("noka version 1.1 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
 
     if (argc < 2) {
         printf("Usage: %s <command> [subcommand] [action]\n", argv[0]);
