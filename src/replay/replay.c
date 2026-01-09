@@ -153,6 +153,7 @@ int noka_replay_disable() {
         fclose(fp);
         // pid 파일이 깨져 있으면 정리만 하고 성공 처리
         unlink(get_pid_path());
+        printf("noka: replay already disabled\n");
         return 0;
     }
     fclose(fp);
