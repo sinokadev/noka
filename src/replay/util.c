@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "noka/util.h"
+#include "util.h"
 
 const char* get_replay_path(void) {
     static char path[512];

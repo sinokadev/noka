@@ -10,9 +10,9 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "noka/replay.h"
-#include "noka/record.h"
-#include "noka/util.h"
+#include "replay.h"
+#include "record.h"
+#include "util.h"
 
 #define REPLAY_KEEP_DAYS   60
 #define REPLAY_SAFE_HOURS  24

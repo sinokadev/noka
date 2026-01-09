@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <string.h>
 
-#include "noka/record.h"
+#include "record.h"
 
 char* get_system_audio() {
     static char device[256];

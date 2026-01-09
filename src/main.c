@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "noka/replay.h"
-#include "noka/save.h"
+#include "replay.h"
+#include "save.h"
 
 int main(int argc, char *argv[]) {
     printf("noka version 1.0.2 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");

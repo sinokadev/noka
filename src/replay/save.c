@@ -5,9 +5,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "noka/replay.h"
-#include "noka/util.h"
-#include "noka/save.h"
+#include "replay.h"
+#include "util.h"
+#include "save.h"
 
 // replay_YYYYMMDD_HHMMSS.mp4 형식인지 (SAVED 제외)
 static int is_plain_replay_mp4(const char* name) {
