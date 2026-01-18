@@ -18,7 +18,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential zip
+          sudo apt-get install -y build-essential zip tar
 
       - name: Build noka
         run: |
@@ -31,18 +31,24 @@ jobs:
               src/replay/save.c \
               -Iinclude \
               -o noka
+          chmod +x noka
 
       - name: Prepare release package
         run: |
           VERSION=${GITHUB_REF_NAME}
-          mkdir -p release
-          cp noka release/
-          echo "noka ${VERSION}" > release/VERSION
-          zip -r noka-${VERSION}-linux-x86_64.zip release
+          mkdir -p dist
+
+          cp noka dist/
+          echo "noka ${VERSION}" > dist/VERSION
+
+          zip -r noka-${VERSION}-linux-x86_64.zip dist
+
+          tar -czf noka-${VERSION}-linux-x86_64.tar.gz dist
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             noka-${{ github.ref_name }}-linux-x86_64.zip
+            noka-${{ github.ref_name }}-linux-x86_64.tar.gz
           generate_release_notes: true
