@@ -6,7 +6,7 @@
 #include "save.h"
 
 int main(int argc, char *argv[]) {
-    printf("noka version 1.1.1 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
+    printf("noka version 1.1.2 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
 
     if (argc < 2) {
         printf("Usage: %s <command> [subcommand] [action]\n", argv[0]);
@@ -27,6 +27,9 @@ int main(int argc, char *argv[]) {
         }
         else if (strcmp(argv[2], "disable") == 0) {
             return noka_replay_disable();
+        }
+        else if (strcmp(argv[2], "ps") == 0) {
+            return noka_replay_ps();
         }
         else if (strcmp(argv[2], "delete") == 0) {
             return noka_delete_old_replay();

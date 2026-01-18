@@ -208,3 +208,34 @@ int noka_replay_disable() {
     fprintf(stderr, "noka: disable timeout (still running)\n");
     return 1;
 }
+
+int noka_replay_ps() {
+    pid_t pid = -1;
+
+    FILE* fp = fopen(get_pid_path(), "r");
+    if (!fp) {
+        printf("noka: replay recording not running\n");
+        return 0;
+    }
+
+    // pid 읽기
+    if (fscanf(fp, "%d", &pid) != 1 || pid <= 1) {
+        fclose(fp);
+        // pid 파일이 깨졌으면 정리
+        unlink(get_pid_path());
+        printf("noka: replay recording not running (invalid pid file)\n");
+        return 0;
+    }
+    fclose(fp);
+
+    // 프로세스 존재 확인
+    if (kill(pid, 0) == 0) {
+        printf("noka: replay recording is running(pid %d)\n", pid);
+        return 0;
+    }
+
+    // 프로세스가 없으면 pid 파일 정리
+    unlink(get_pid_path());
+    printf("noka: replay recording not running (stale pid file)\n");
+    return 0;
+}
