@@ -5,18 +5,47 @@
 #include "replay.h"
 #include "save.h"
 
-int main(int argc, char *argv[]) {
-    printf("noka version 1.1.2 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
+void print_help(const char *prog) {
+    printf(
+        "Usage:\n"
+        "  %s <command> [subcommand] [options]\n\n"
+        "Commands:\n"
+        "  replay <action>        Replay control\n\n"
+        "Replay actions:\n"
+        "  enable                 Enable replay recording\n"
+        "  disable                Disable replay recording\n"
+        "  ps                     Show replay daemon status\n"
+        "  delete                 Delete old replay files\n"
+        "  save [-c N]             Save last N replays (default: 1)\n\n"
+        "Options:\n"
+        "  -h, --help              Show this help message\n",
+        prog
+    );
+}
 
-    if (argc < 2) {
-        printf("Usage: %s <command> [subcommand] [action]\n", argv[0]);
-        return 1;
+int main(int argc, char *argv[]) {
+    printf("noka version 1.1.3 (built " BUILD_DATE ") Copyright (c) 2025 sinokadev\n");
+
+    // 전역 help
+    if (argc == 1 ||
+        strcmp(argv[1], "-h") == 0 ||
+        strcmp(argv[1], "--help") == 0) {
+        print_help(argv[0]);
+        return 0;
     }
 
     if (strcmp(argv[1], "replay") == 0) {
-        if (argc < 3) {
-            printf("Usage: noka replay <enable|disable|save>\n");
-            return 1;
+        if (argc < 3 ||
+            strcmp(argv[2], "-h") == 0 ||
+            strcmp(argv[2], "--help") == 0) {
+
+            printf(
+                "Usage:\n"
+                "  noka replay <enable|disable|ps|delete|save> [options]\n\n"
+                "Options:\n"
+                "  save -c, --count N      Number of replays to save\n"
+            );
+            return 0;
         }
 
         system("mkdir -p ~/noka/temp");
@@ -37,14 +66,18 @@ int main(int argc, char *argv[]) {
         else if (strcmp(argv[2], "save") == 0) {
             int count = 1;
 
-            // argv[3]부터 옵션 파싱
             for (int i = 3; i < argc; i++) {
                 if ((strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--count") == 0) &&
                     i + 1 < argc) {
                     count = atoi(argv[i + 1]);
                     if (count <= 0) count = 1;
-                    i++; // 값 하나 소비
-                } else {
+                    i++;
+                }
+                else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+                    printf("Usage: noka replay save [-c N]\n");
+                    return 0;
+                }
+                else {
                     printf("Unknown option: %s\n", argv[i]);
                     return 1;
                 }
@@ -52,7 +85,6 @@ int main(int argc, char *argv[]) {
 
             return noka_save_replay(count);
         }
-
         else {
             printf("Unknown subcommand: %s\n", argv[2]);
             return 1;

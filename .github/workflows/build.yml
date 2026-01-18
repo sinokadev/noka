@@ -1,0 +1,48 @@
+name: Build & Release noka
+
+on:
+  push:
+    tags:
+      - "v*"   # v1.1.2 같은 태그 푸시 시 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential zip
+
+      - name: Build noka
+        run: |
+          BUILD_DATE=$(date +%Y-%m-%d)
+          gcc -DBUILD_DATE=\"${BUILD_DATE}\" \
+              src/main.c \
+              src/replay/replay.c \
+              src/replay/record.c \
+              src/replay/util.c \
+              src/replay/save.c \
+              -Iinclude \
+              -o noka
+
+      - name: Prepare release package
+        run: |
+          VERSION=${GITHUB_REF_NAME}
+          mkdir -p release
+          cp noka release/
+          echo "noka ${VERSION}" > release/VERSION
+          zip -r noka-${VERSION}-linux-x86_64.zip release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            noka-${{ github.ref_name }}-linux-x86_64.zip
+          generate_release_notes: true
